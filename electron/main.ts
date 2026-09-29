@@ -1,0 +1,61 @@
+import { app, BrowserWindow, ipcMain } from 'electron'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+// Chemins fournis par vite-plugin-electron en dev / prod
+process.env.APP_ROOT = path.join(__dirname, '..')
+export const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']
+export const MAIN_DIST = path.join(process.env.APP_ROOT, 'dist-electron')
+export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
+
+let win: BrowserWindow | null = null
+
+function createWindow() {
+    win = new BrowserWindow({
+        width: 1000,
+        height: 400,
+        frame: false,
+        transparent: true, // coins arrondis + verre Aero de 7.css
+        webPreferences: {
+            preload: path.join(MAIN_DIST, 'preload.mjs'),
+            contextIsolation: true,
+            nodeIntegration: false,
+        },
+    })
+
+    if (VITE_DEV_SERVER_URL) {
+        win.loadURL(VITE_DEV_SERVER_URL)
+        //win.webContents.openDevTools()
+    } else {
+        win.loadFile(path.join(RENDERER_DIST, 'index.html'))
+    }
+
+    // On prévient le renderer quand l'état maximisé change (pour changer l'icône du bouton)
+    win.on('maximize', () => win?.webContents.send('window:maximized', true))
+    win.on('unmaximize', () => win?.webContents.send('window:maximized', false))
+}
+
+// Exemple d'IPC : le renderer peut demander la version de l'app
+ipcMain.handle('app:getVersion', () => app.getVersion())
+
+// Contrôles de la fenêtre, appelés depuis notre barre de titre custom
+ipcMain.on('window:minimize', () => win?.minimize())
+ipcMain.on('window:maximize', () => {
+    if (win?.isMaximized()) {
+        win.unmaximize()
+    } else {
+        win?.maximize()
+    }
+})
+ipcMain.on('window:close', () => win?.close())
+
+app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+        app.quit()
+        win = null
+    }
+})
+
+app.whenReady().then(createWindow)

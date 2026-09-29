@@ -1,0 +1,48 @@
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  overflow: hidden; /* seul le contenu sous la title bar doit scroller */
+  background: transparent; /* fenêtre Electron transparente (effet Aero) */
+}
+
+/* La fenêtre 7.css remplit toute la fenêtre Electron */
+.app-window {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.app-window .title-bar {
+  -webkit-app-region: drag; /* barre déplaçable... */
+}
+
+.app-window .title-bar-controls {
+  -webkit-app-region: no-drag; /* ...sauf les boutons */
+}
+
+.app-window-body {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  margin: 0;
+}
+
+.app-scroll {
+  flex: 1;
+  min-height: 0; /* laisse flexbox rétrécir un enfant plus grand que son parent */
+  overflow-y: auto; /* pleine largeur, pour que la scrollbar colle au bord de la fenêtre */
+}
+
+.app-content {
+  /* la largeur de contenu 1126px s'applique ici, séparément du conteneur qui scroll */
+  /*width: 1126px;*/
+  max-width: 100%;
+  margin: 0 auto;
+  /*text-align: center;*/
+  box-sizing: border-box;
+}
