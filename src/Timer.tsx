@@ -1,4 +1,5 @@
 import {useTimer} from "react-timer-hook";
+import {useEffect, useState} from "react";
 
 export function Timer({ expiryTimestamp }: { expiryTimestamp: Date}) {
     const {
@@ -12,6 +13,13 @@ export function Timer({ expiryTimestamp }: { expiryTimestamp: Date}) {
         restart,
     } = useTimer({ expiryTimestamp, onExpire: () => console.warn('onExpire called'),  interval: 20 });
 
+    const [percentage, setPercentage] = useState<number>(0)
+
+
+
+    useEffect(()=>{
+
+    })
 
     return (
         <div style={{textAlign: 'center'}}>
@@ -30,7 +38,12 @@ export function Timer({ expiryTimestamp }: { expiryTimestamp: Date}) {
                 const time = new Date();
                 time.setSeconds(time.getSeconds() + 300);
                 restart(time)
-            }}>Restart</button>
+            }}>Restart
+            </button>
+
+            <div role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={80}>
+                <div style={{width:  percentage + "%" }}></div>
+            </div>
         </div>
     )
 }

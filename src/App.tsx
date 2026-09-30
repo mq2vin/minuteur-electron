@@ -9,11 +9,6 @@ function App() {
   return (
     <div>
         <Timer expiryTimestamp={time} />
-
-
-        <div role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={80}>
-            <div style={{width: "80%"}}></div>
-        </div>
     </div>
   )
 }
