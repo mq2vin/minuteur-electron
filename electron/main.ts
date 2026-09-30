@@ -12,10 +12,11 @@ export const RENDERER_DIST = path.join(process.env.APP_ROOT, 'dist')
 
 let win: BrowserWindow | null = null
 
-function createWindow() {
+function createWindow(route = "/", options: Electron.BrowserWindowConstructorOptions = {}) {
     win = new BrowserWindow({
         width: 1000,
         height: 400,
+        resizable: false,
         frame: false,
         transparent: true, // coins arrondis + verre Aero de 7.css
         webPreferences: {
@@ -23,13 +24,14 @@ function createWindow() {
             contextIsolation: true,
             nodeIntegration: false,
         },
+        ...options
     })
 
     if (VITE_DEV_SERVER_URL) {
-        win.loadURL(VITE_DEV_SERVER_URL)
+        win.loadURL(`${VITE_DEV_SERVER_URL}#${route}`)
         //win.webContents.openDevTools()
     } else {
-        win.loadFile(path.join(RENDERER_DIST, 'index.html'))
+        win.loadFile(path.join(RENDERER_DIST, 'index.html'),  { hash: route })
     }
 
     // On prévient le renderer quand l'état maximisé change (pour changer l'icône du bouton)
@@ -37,19 +39,28 @@ function createWindow() {
     win.on('unmaximize', () => win?.webContents.send('window:maximized', false))
 }
 
+function getWin(e: Electron.IpcMainInvokeEvent | Electron.IpcMainEvent) {
+    return BrowserWindow.fromWebContents(e.sender)
+}
+
 // Exemple d'IPC : le renderer peut demander la version de l'app
 ipcMain.handle('app:getVersion', () => app.getVersion())
 
 // Contrôles de la fenêtre, appelés depuis notre barre de titre custom
-ipcMain.on('window:minimize', () => win?.minimize())
-ipcMain.on('window:maximize', () => {
+ipcMain.on('window:minimize', (event) => getWin(event)?.minimize())
+ipcMain.on('window:maximize', (event) => {
+    const win = getWin(event)
     if (win?.isMaximized()) {
         win.unmaximize()
     } else {
         win?.maximize()
     }
 })
-ipcMain.on('window:close', () => win?.close())
+ipcMain.on('window:close', (event) => getWin(event)?.close())
+
+ipcMain.handle('open-window', (_e, route: string) => {
+    createWindow(route, { width: 1000, height: 400 })
+})
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
@@ -58,4 +69,4 @@ app.on('window-all-closed', () => {
     }
 })
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => createWindow('/', { width: 200, height: 200 }))

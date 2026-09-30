@@ -13,6 +13,7 @@ declare global {
             minimize: () => void
             maximize: () => void
             close: () => void
+            openWindow: (url: string) => void
             onMaximizedChange: (callback: (isMaximized: boolean) => void) => () => void
         }
     }
@@ -22,7 +23,7 @@ declare global {
 export function Window({ children, name }: PropsWithChildren<WindowProps>) {
 
     return (
-        <div className="window active app-window">
+        <div className="window glass active app-window">
             <div className="title-bar">
                 <div className="title-bar-text">{name}</div>
                 <div className="title-bar-controls">

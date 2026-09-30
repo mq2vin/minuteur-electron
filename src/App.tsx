@@ -1,15 +1,18 @@
+//import {Timer} from "./Timer.tsx";
+
+import {Home} from "./pages/Home.tsx";
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import {Timer} from "./Timer.tsx";
 
 function App() {
-    const time = new Date();
-
-    time.setSeconds(time.getSeconds() + 300);
-
 
   return (
-    <div>
-        <Timer expiryTimestamp={time} />
-    </div>
+      <HashRouter>
+          <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/Timer/:duration" element={<Timer/>} />
+          </Routes>
+      </HashRouter>
   )
 }
 
