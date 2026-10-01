@@ -7,6 +7,22 @@ body,
   background: transparent; /* fenêtre Electron transparente (effet Aero) */
 }
 
+.app-window-body::-webkit-scrollbar {
+  display: none;
+}
+
+.timer-parent{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(1, 1fr);
+  gap: 10px;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.app-window-body {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
 /* La fenêtre 7.css remplit toute la fenêtre Electron */
 .app-window {
   display: flex;

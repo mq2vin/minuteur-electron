@@ -54,7 +54,8 @@ export function Timer() {
 
     useEffect(()=>{
         if(percentage==100){
-            window.electronAPI.close()
+            //juste pour tester
+            //window.electronAPI.close()
         }
     })
 

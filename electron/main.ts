@@ -69,4 +69,4 @@ app.on('window-all-closed', () => {
     }
 })
 
-app.whenReady().then(() => createWindow('/', { width: 200, height: 200 }))
+app.whenReady().then(() => createWindow('/', { width: 500, height: 250 }))
