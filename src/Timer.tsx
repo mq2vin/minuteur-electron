@@ -2,14 +2,12 @@ import {useTimer} from "react-timer-hook";
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 
-/*
-interface TimerProps {
-    durationSeconds: number
-}
-*/
 
 export function Timer() {
     const { duration } = useParams();
+
+    const swoopAudio = new Audio('./swoop.wav');
+    swoopAudio.loop = true;
 
 
     const [expiry, setExpiry] = useState(() => {
@@ -26,7 +24,7 @@ export function Timer() {
         pause,
         resume,
         restart,
-    } = useTimer({ expiryTimestamp: expiry, onExpire: () => console.warn('onExpire called'),  interval: 20 });
+    } = useTimer({ expiryTimestamp: expiry, onExpire: () => console.warn('onExpire called'),  interval: 10 });
 
 
     const [totalDuration, setTotalDuration] = useState(Number(duration));
@@ -41,6 +39,7 @@ export function Timer() {
         t.setSeconds(t.getSeconds() + newSeconds);
         setExpiry(t);
         setTotalDuration(newSeconds);
+        swoopAudio.pause();
         restart(t);
     };
 
@@ -54,6 +53,7 @@ export function Timer() {
 
     useEffect(()=>{
         if(percentage==100){
+            swoopAudio.play();
             //juste pour tester
             //window.electronAPI.close()
         }
@@ -68,13 +68,15 @@ export function Timer() {
             <h1> Minuteur </h1>
             <p>Tic Tac</p>
             <div style={{fontSize: '100px'}}>
-                {/*<span>{days}</span>:<span>{hours}</span>:<span>{minutes}</span>:<span>{seconds}</span>:<span>{milliseconds}</span>*/}
                 <span>{hours} h </span>:<span> {minutes} min </span>:<span> {seconds} s</span>
             </div>
-            <p>{isRunning ? 'Running' : 'Not running'}</p>
-            <button onClick={toggleTimer}>{isRunning ? "Pause" : "Resume"}</button>
-            <button onClick={() => handleRestart(Number(duration))}>Restart
-            </button>
+            {/*<p>{isRunning ? 'Running' : 'Not running'}</p>*/}
+            {percentage == 100 && <p>Fin !</p>}
+            <div style={{display: 'flex', justifyContent: 'center', gap: '10px'}}>
+                {percentage == 100 && <button onClick={()=> window.electronAPI.close()}>stop</button>}
+                {percentage !==100 && <button onClick={toggleTimer}>{isRunning ? "Pause" : "Reprendre"}</button>}
+                <button onClick={() => handleRestart(Number(duration))}>Restart</button>
+            </div>
 
             <div role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={80} style={{margin: '30px 50px 0px 50px'}}>
                 <div style={{width:  percentage + "%" }}></div>

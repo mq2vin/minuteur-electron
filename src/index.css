@@ -5,6 +5,7 @@ body,
   height: 100%;
   overflow: hidden; /* seul le contenu sous la title bar doit scroller */
   background: transparent; /* fenêtre Electron transparente (effet Aero) */
+  user-select: none;
 }
 
 .app-window-body::-webkit-scrollbar {

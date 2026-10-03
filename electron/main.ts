@@ -16,6 +16,7 @@ function createWindow(route = "/", options: Electron.BrowserWindowConstructorOpt
     win = new BrowserWindow({
         width: 1000,
         height: 400,
+        icon: path.join(VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT!, 'public') : RENDERER_DIST, 'icon.ico'),
         resizable: false,
         frame: false,
         transparent: true, // coins arrondis + verre Aero de 7.css
