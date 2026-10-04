@@ -28,7 +28,7 @@ export function Window({ children, name }: PropsWithChildren<WindowProps>) {
                 <div className="title-bar-text">{name}</div>
                 <div className="title-bar-controls">
                     <button onClick={() => window.electronAPI.minimize()} aria-label="Minimize"></button>
-                    <button onClick={() => window.electronAPI.maximize()} aria-label="Maximize"></button>
+                    {/*<button onClick={() => window.electronAPI.maximize()} aria-label="Maximize"></button>*/}
                     <button onClick={() => window.electronAPI.close()} aria-label="Close"></button>
                 </div>
             </div>

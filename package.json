@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "author": "mq2vin",
   "description": "Minuteur coder en react (vite + typescript) et electron",
+  "desktopName": "minuteur-electron.desktop",
   "type": "module",
   "main": "dist-electron/main.js",
   "scripts": {
@@ -24,6 +25,16 @@
     ],
     "win": {
       "icon": "build/minuteur_aero_large.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "build/minuteur_aero_large.png",
+      "category": "Utility",
+      "maintainer": "mq2vin",
+      "syncDesktopName": true
     }
   },
   "dependencies": {
